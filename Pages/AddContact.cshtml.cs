@@ -1,3 +1,4 @@
+// AddContactModel.cs
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,17 +20,17 @@ public class AddContactModel : PageModel
 
     public IActionResult OnPost()
     {
-        if (ModelState.IsValid)
+        if (string.IsNullOrWhiteSpace(Contact.Name) ||
+            string.IsNullOrWhiteSpace(Contact.Phone) ||
+            string.IsNullOrWhiteSpace(Contact.Category))
         {
-            _context.Contacts.Add(Contact);
-            _context.SaveChanges();
-            Message = "Абонент успешно добавлен!";
-            return RedirectToPage("/Welcome");
-        }
-        else
-        {
-            Message = "Ошибка! Пожалуйста, заполните все поля.";
+            Message = "Ошибка! Все поля должны быть заполнены.";
             return Page();
         }
+
+        _context.Contacts.Add(Contact);
+        _context.SaveChanges();
+        Message = "Абонент успешно добавлен!";
+        return RedirectToPage("/Welcome");
     }
 }

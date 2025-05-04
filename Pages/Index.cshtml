@@ -1,76 +1,121 @@
 @page
 @model IndexModel
 @{
-    ViewData["Title"] = "Вход / Регистрация";
+    ViewData["Title"] = "Телефонная книга";
 }
 
 <style>
     body {
         font-family: Arial, sans-serif;
-        background-color: #f4f7fa;
-        color: #333;
+        background-color: #f5f5f5;
         margin: 0;
+        padding: 0;
+    }
+
+    .header {
+        background-color: #2a9d8f;
+        color: white;
         padding: 20px;
+        text-align: center;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+        margin: 0;
+        font-size: 24px;
+    }
+
+    .content {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        padding: 30px;
+    }
+
+    .auth-box {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        padding: 30px;
+        width: 350px;
     }
 
     h2 {
         color: #2a9d8f;
-        margin-bottom: 10px;
+        margin-top: 0;
+        margin-bottom: 20px;
+        text-align: center;
     }
 
-    form {
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-        max-width: 400px;
-        margin: 0 auto;
-        background-color: #fff;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    .form-group {
+        margin-bottom: 15px;
     }
 
     input {
-        padding: 12px;
-        border-radius: 5px;
-        border: 1px solid #ccc;
         width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-sizing: border-box;
     }
 
     button {
-        padding: 12px 20px;
-        background-color: #2a9d8f;
+        width: 100%;
+        padding: 10px;
+        background: #2a9d8f;
         color: white;
         border: none;
-        border-radius: 5px;
+        border-radius: 4px;
         cursor: pointer;
+        font-weight: bold;
     }
 
         button:hover {
-            background-color: #1e7a64;
+            background: #21867a;
         }
 
-    p {
+    .message {
+        color: #e74c3c;
+        margin: 15px 0;
         text-align: center;
-        color: red;
     }
 </style>
 
-<h2>Регистрация</h2>
-<form method="post" asp-page-handler="Register">
-    <input asp-for="RegisterUsername" placeholder="Имя пользователя" />
-    <input asp-for="RegisterPassword" type="password" placeholder="Пароль" />
-    <button type="submit">Зарегистрироваться</button>
-</form>
+<div class="header">
+    <h1>Телефонная книга</h1>
+</div>
 
-<h2>Вход</h2>
-<form method="post" asp-page-handler="Login">
-    <input asp-for="LoginUsername" placeholder="Имя пользователя" />
-    <input asp-for="LoginPassword" type="password" placeholder="Пароль" />
-    <button type="submit">Войти</button>
-</form>
+<div class="content">
+    <!-- Форма входа слева -->
+    <div class="auth-box">
+        <h2>Вход</h2>
+        <form method="post" asp-page-handler="Login">
+            <div class="form-group">
+                <input asp-for="LoginUsername" placeholder="Имя пользователя">
+            </div>
+            <div class="form-group">
+                <input asp-for="LoginPassword" type="password" placeholder="Пароль">
+            </div>
+            <button type="submit">Войти</button>
+        </form>
+    </div>
+
+    <!-- Форма регистрации справа -->
+    <div class="auth-box">
+        <h2>Регистрация</h2>
+        <form method="post" asp-page-handler="Register">
+            <div class="form-group">
+                <input asp-for="RegisterUsername" placeholder="Имя пользователя">
+            </div>
+            <div class="form-group">
+                <input asp-for="RegisterPassword" type="password" placeholder="Пароль">
+            </div>
+            <button type="submit">Зарегистрироваться</button>
+        </form>
+    </div>
+</div>
 
 @if (!string.IsNullOrEmpty(Model.Message))
 {
-    <p>@Model.Message</p>
+    <div class="message" style="text-align: center; margin-top: 20px;">@Model.Message</div>
 }

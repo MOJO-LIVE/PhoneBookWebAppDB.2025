@@ -10,10 +10,19 @@ public class IndexModel : PageModel
         _context = context;
     }
 
-    [BindProperty] public string RegisterUsername { get; set; } = "";
-    [BindProperty] public string RegisterPassword { get; set; } = "";
-    [BindProperty] public string LoginUsername { get; set; } = "";
-    [BindProperty] public string LoginPassword { get; set; } = "";
+    [BindProperty]
+    public string RegisterUsername { get; set; } = "";
+
+    [BindProperty]
+    public string RegisterPassword { get; set; } = "";
+
+    [BindProperty]
+    public string LoginUsername { get; set; } = "";
+
+    [BindProperty]
+    public string LoginPassword { get; set; } = "";
+
+    [TempData]
     public string Message { get; set; } = "";
 
     public void OnGet() { }
@@ -28,22 +37,34 @@ public class IndexModel : PageModel
 
         if (_context.Users.Any(u => u.Username == RegisterUsername))
         {
-            Message = "Пользователь уже существует.";
+            Message = "Пользователь с таким именем уже существует.";
             return Page();
         }
 
-        _context.Users.Add(new User { Username = RegisterUsername, Password = RegisterPassword, Role = "User" });
+        _context.Users.Add(new User
+        {
+            Username = RegisterUsername,
+            Password = RegisterPassword,
+            Role = "User"
+        });
         _context.SaveChanges();
-        Message = "Регистрация успешна!";
+
+        Message = "Регистрация успешно завершена! Теперь вы можете войти.";
         return Page();
     }
 
     public IActionResult OnPostLogin()
     {
+        if (string.IsNullOrWhiteSpace(LoginUsername) || string.IsNullOrWhiteSpace(LoginPassword))
+        {
+            Message = "Введите имя пользователя и пароль.";
+            return Page();
+        }
+
         var user = _context.Users.FirstOrDefault(u => u.Username == LoginUsername && u.Password == LoginPassword);
         if (user == null)
         {
-            Message = "Неверные данные для входа.";
+            Message = "Неверное имя пользователя или пароль.";
             return Page();
         }
 

@@ -4,74 +4,90 @@
     ViewData["Title"] = "Редактировать контакт";
 }
 
-<h2 class="title">Редактировать контакт</h2>
-
-<form method="post" class="form-container">
-    <input type="hidden" asp-for="Contact.Id" />
-
-    <label>Имя:</label>
-    <input asp-for="Contact.Name" class="input" />
-
-    <label>Телефон:</label>
-    <input asp-for="Contact.Phone" class="input" />
-
-    <label>Категория:</label>
-    <input asp-for="Contact.Category" class="input" />
-
-    <div class="button-group">
-        <button type="submit" class="btn btn-primary">Обновить</button>
-        <a asp-page="/Welcome" class="btn btn-secondary">Назад</a>
-        <button type="submit" asp-page-handler="Delete" class="btn btn-danger" onclick="return confirm('Удалить контакт?');">Удалить</button>
-    </div>
-</form>
-
-@if (!string.IsNullOrEmpty(Model.Message))
-{
-    <p class="message">@Model.Message</p>
-}
-
 <style>
-    .form-container {
-        max-width: 500px;
-        margin-top: 20px;
-        background-color: #f4f4f4;
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f7fa;
+        color: #333;
+        margin: 0;
         padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 0 10px #ccc;
+    }
+
+    .header {
+        background-color: #2a9d8f;
+        color: white;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        margin-bottom: 30px;
+    }
+
+    h1 {
+        margin: 0;
+        font-size: 24px;
+    }
+
+    .form-container {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        padding: 30px;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        color: #555;
+        font-weight: 500;
     }
 
     .input {
         width: 100%;
-        padding: 8px;
-        margin-bottom: 15px;
-        border: 1px solid #ccc;
-        border-radius: 6px;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-sizing: border-box;
         font-size: 16px;
     }
+
+        .input:focus {
+            border-color: #2a9d8f;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(42, 157, 143, 0.2);
+        }
 
     .button-group {
         display: flex;
         gap: 10px;
+        margin-top: 25px;
     }
 
     .btn {
         padding: 10px 20px;
-        font-size: 16px;
-        border-radius: 8px;
+        border-radius: 4px;
         border: none;
         cursor: pointer;
+        font-size: 16px;
+        font-weight: 500;
+        transition: all 0.2s;
+        flex: 1;
+        text-align: center;
         text-decoration: none;
-        display: inline-block;
-        transition: 0.2s ease;
     }
 
     .btn-primary {
-        background-color: #007bff;
+        background-color: #2a9d8f;
         color: white;
     }
 
         .btn-primary:hover {
-            background-color: #0069d9;
+            background-color: #21867a;
         }
 
     .btn-secondary {
@@ -84,21 +100,69 @@
         }
 
     .btn-danger {
-        background-color: #dc3545;
+        background-color: #e74c3c;
         color: white;
     }
 
         .btn-danger:hover {
-            background-color: #c82333;
+            background-color: #c0392b;
         }
 
-    .title {
+    .message {
+        text-align: center;
         margin-top: 20px;
-        font-size: 24px;
+        padding: 10px;
+        border-radius: 4px;
     }
 
-    .message {
-        color: green;
-        margin-top: 15px;
+    .success {
+        background-color: #d4edda;
+        color: #155724;
+    }
+
+    .error {
+        background-color: #f8d7da;
+        color: #721c24;
     }
 </style>
+
+<div class="header">
+    <h1>Редактировать контакт</h1>
+</div>
+
+<div class="form-container">
+    <form method="post">
+        <input type="hidden" asp-for="Contact.Id" />
+
+        <div class="form-group">
+            <label>Имя:</label>
+            <input asp-for="Contact.Name" class="input" />
+        </div>
+
+        <div class="form-group">
+            <label>Телефон:</label>
+            <input asp-for="Contact.Phone" class="input" />
+        </div>
+
+        <div class="form-group">
+            <label>Категория:</label>
+            <input asp-for="Contact.Category" class="input" />
+        </div>
+
+        <div class="button-group">
+            <button type="submit" class="btn btn-primary">Обновить</button>
+            <a asp-page="/Welcome" class="btn btn-secondary">Назад</a>
+            <button type="submit" asp-page-handler="Delete" class="btn btn-danger"
+                    onclick="return confirm('Вы уверены, что хотите удалить этот контакт?');">
+                Удалить
+            </button>
+        </div>
+    </form>
+</div>
+
+@if (!string.IsNullOrEmpty(Model.Message))
+{
+    <div class="message @(Model.Message.Contains("успеш") ? "success" : "error")">
+        @Model.Message
+    </div>
+}
