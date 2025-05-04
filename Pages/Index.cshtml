@@ -1,0 +1,76 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Вход / Регистрация";
+}
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f7fa;
+        color: #333;
+        margin: 0;
+        padding: 20px;
+    }
+
+    h2 {
+        color: #2a9d8f;
+        margin-bottom: 10px;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        max-width: 400px;
+        margin: 0 auto;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    input {
+        padding: 12px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        width: 100%;
+    }
+
+    button {
+        padding: 12px 20px;
+        background-color: #2a9d8f;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+        button:hover {
+            background-color: #1e7a64;
+        }
+
+    p {
+        text-align: center;
+        color: red;
+    }
+</style>
+
+<h2>Регистрация</h2>
+<form method="post" asp-page-handler="Register">
+    <input asp-for="RegisterUsername" placeholder="Имя пользователя" />
+    <input asp-for="RegisterPassword" type="password" placeholder="Пароль" />
+    <button type="submit">Зарегистрироваться</button>
+</form>
+
+<h2>Вход</h2>
+<form method="post" asp-page-handler="Login">
+    <input asp-for="LoginUsername" placeholder="Имя пользователя" />
+    <input asp-for="LoginPassword" type="password" placeholder="Пароль" />
+    <button type="submit">Войти</button>
+</form>
+
+@if (!string.IsNullOrEmpty(Model.Message))
+{
+    <p>@Model.Message</p>
+}

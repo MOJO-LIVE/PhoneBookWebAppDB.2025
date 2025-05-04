@@ -1,0 +1,142 @@
+@page
+@model WelcomeModel
+@{
+    ViewData["Title"] = "Главная";
+}
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f7fa;
+        color: #333;
+        margin: 0;
+        padding: 20px;
+    }
+
+    h2 {
+        color: #2a9d8f;
+    }
+
+    form {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    input[type="text"] {
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        width: 300px;
+    }
+
+    button {
+        padding: 10px 20px;
+        background-color: #2a9d8f;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+        button:hover {
+            background-color: #1e7a64;
+        }
+
+    a {
+        text-decoration: none;
+        color: #2a9d8f;
+        margin-left: 10px;
+    }
+
+        a:hover {
+            color: #1e7a64;
+        }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    th, td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #2a9d8f;
+        color: white;
+    }
+
+    tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    .action-button {
+        background-color: #e76f51;
+        color: white;
+        padding: 6px 12px;
+        border-radius: 5px;
+        text-decoration: none;
+    }
+
+        .action-button:hover {
+            background-color: #f4a261;
+        }
+
+    .action-links {
+        margin-top: 20px;
+    }
+
+        .action-links a {
+            margin-left: 15px;
+        }
+</style>
+
+<h2>Привет, @Model.Username!</h2>
+<p>Ваша роль: @Model.Role</p>
+
+<form method="get">
+    <input type="text" name="search" value="@Model.Search" placeholder="Поиск по имени, телефону, категории" />
+    <button type="submit">Искать</button>
+    <a asp-page="/Welcome">Сбросить</a>
+</form>
+
+<table>
+    <thead>
+        <tr>
+            <th>Имя</th>
+            <th>Телефон</th>
+            <th>Категория</th>
+            @if (Model.Role == "Admin")
+            {
+                <th>Действия</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var contact in Model.Contacts)
+        {
+            <tr>
+                <td>@contact.Name</td>
+                <td>@contact.Phone</td>
+                <td>@contact.Category</td>
+                @if (Model.Role == "Admin")
+                {
+                    <td><a class="action-button" asp-page="/EditContact" asp-route-id="@contact.Id">Редактировать</a></td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="action-links">
+    <a asp-page="/AddContact">Добавить контакт</a>
+    @if (Model.Role == "Admin")
+    {
+        <a asp-page="/AssignRole" style="margin-left: 10px;">Назначить роль</a>
+    }
+    <a asp-page="/Index" style="margin-left: 10px;">Выход</a>
+</div>

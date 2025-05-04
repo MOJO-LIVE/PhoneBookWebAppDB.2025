@@ -1,0 +1,134 @@
+@page
+@model AssignRoleModel
+@{
+    ViewData["Title"] = "Назначение ролей";
+}
+
+<style>
+    body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f4f7fa;
+        margin: 0;
+        padding: 30px;
+        color: #333;
+    }
+
+    h2 {
+        text-align: center;
+        color: #2a9d8f;
+        margin-bottom: 30px;
+    }
+
+    table {
+        width: 90%;
+        margin: 0 auto;
+        border-collapse: collapse;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    th, td {
+        padding: 14px 18px;
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #e0f2f1;
+        color: #333;
+        font-weight: 600;
+    }
+
+    tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    button {
+        padding: 8px 16px;
+        background-color: #2a9d8f;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.95rem;
+        transition: background-color 0.3s ease;
+    }
+
+        button:hover {
+            background-color: #1f7769;
+        }
+
+    .message {
+        margin: 20px auto;
+        width: fit-content;
+        padding: 10px 20px;
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+        border-radius: 5px;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .back-link {
+        display: block;
+        width: fit-content;
+        margin: 30px auto 0;
+        text-align: center;
+        text-decoration: none;
+        background-color: #6c757d;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 6px;
+        transition: background-color 0.3s ease;
+    }
+
+        .back-link:hover {
+            background-color: #5a6268;
+        }
+</style>
+
+<h2>Пользователи и роли</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Имя пользователя</th>
+            <th>Текущая роль</th>
+            <th>Действие</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model.Users)
+        {
+            <tr>
+                <td>@user.Id</td>
+                <td>@user.Username</td>
+                <td>@user.Role</td>
+                <td>
+                    @if (user.Role != "Admin")
+                    {
+                        <form method="post">
+                            <input type="hidden" name="SelectedUserId" value="@user.Id" />
+                            <button type="submit">Сделать админом</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <span style="color: #888;">Администратор</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if (!string.IsNullOrEmpty(Model.Message))
+{
+    <p class="message">@Model.Message</p>
+}
+
+<a class="back-link" asp-page="/Welcome">Назад</a>

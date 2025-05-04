@@ -1,0 +1,104 @@
+@page "{id:int}"
+@model EditContactModel
+@{
+    ViewData["Title"] = "Редактировать контакт";
+}
+
+<h2 class="title">Редактировать контакт</h2>
+
+<form method="post" class="form-container">
+    <input type="hidden" asp-for="Contact.Id" />
+
+    <label>Имя:</label>
+    <input asp-for="Contact.Name" class="input" />
+
+    <label>Телефон:</label>
+    <input asp-for="Contact.Phone" class="input" />
+
+    <label>Категория:</label>
+    <input asp-for="Contact.Category" class="input" />
+
+    <div class="button-group">
+        <button type="submit" class="btn btn-primary">Обновить</button>
+        <a asp-page="/Welcome" class="btn btn-secondary">Назад</a>
+        <button type="submit" asp-page-handler="Delete" class="btn btn-danger" onclick="return confirm('Удалить контакт?');">Удалить</button>
+    </div>
+</form>
+
+@if (!string.IsNullOrEmpty(Model.Message))
+{
+    <p class="message">@Model.Message</p>
+}
+
+<style>
+    .form-container {
+        max-width: 500px;
+        margin-top: 20px;
+        background-color: #f4f4f4;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px #ccc;
+    }
+
+    .input {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 16px;
+    }
+
+    .button-group {
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        transition: 0.2s ease;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        color: white;
+    }
+
+        .btn-primary:hover {
+            background-color: #0069d9;
+        }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        color: white;
+    }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+    .btn-danger {
+        background-color: #dc3545;
+        color: white;
+    }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+    .title {
+        margin-top: 20px;
+        font-size: 24px;
+    }
+
+    .message {
+        color: green;
+        margin-top: 15px;
+    }
+</style>
