@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Data;
 
 public class EditContactModel : PageModel
 {
@@ -14,34 +15,50 @@ public class EditContactModel : PageModel
     public Contact Contact { get; set; } = new();
 
     public string Message { get; set; } = "";
+    public string Username { get; set; } = "";
+    public string Role { get; set; } = "User";
 
     public void OnGet(int id)
     {
+        Username = TempData["Username"]?.ToString() ?? "";
+        Role = TempData["Role"]?.ToString() ?? "User";
+
         var contact = _context.Contacts.Find(id);
         if (contact != null)
         {
-            Contact = contact;
+            // Только если админ или владелец
+            if (Role == "Admin" || contact.OwnerUsername == Username)
+            {
+                Contact = contact;
+            }
         }
+
+        TempData["Username"] = Username;
+        TempData["Role"] = Role;
     }
 
     public IActionResult OnPost()
     {
-        if (!ModelState.IsValid)
-        {
-            Message = "Проверьте правильность введённых данных.";
-            return Page();
-        }
+        Username = TempData["Username"]?.ToString() ?? "";
+        Role = TempData["Role"]?.ToString() ?? "User";
 
         var existing = _context.Contacts.Find(Contact.Id);
-        if (existing != null)
+        if (existing == null) return RedirectToPage("/Welcome");
+
+        // Только если админ или владелец
+        if (Role != "Admin" && existing.OwnerUsername != Username)
         {
-            existing.Name = Contact.Name;
-            existing.Phone = Contact.Phone;
-            existing.Category = Contact.Category;
-            _context.SaveChanges();
-            Message = "Контакт успешно обновлён.";
+            return RedirectToPage("/Welcome");
         }
 
+        existing.Name = Contact.Name;
+        existing.Phone = Contact.Phone;
+        existing.Category = Contact.Category;
+
+        _context.SaveChanges();
+
+        TempData["Username"] = Username;
+        TempData["Role"] = Role;
         return RedirectToPage("/Welcome");
     }
 

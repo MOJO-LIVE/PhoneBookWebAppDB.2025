@@ -25,8 +25,16 @@ public class WelcomeModel : PageModel
         Username = TempData["Username"]?.ToString() ?? "Гость";
         Role = TempData["Role"]?.ToString() ?? "User";
 
+        // Базовый запрос
         var query = _context.Contacts.AsQueryable();
 
+        // Если не админ — фильтруем по владельцу
+        if (Role != "Admin")
+        {
+            query = query.Where(c => c.OwnerUsername == Username);
+        }
+
+        // Поиск по строке
         if (!string.IsNullOrWhiteSpace(Search))
         {
             query = query.Where(c =>
@@ -37,7 +45,9 @@ public class WelcomeModel : PageModel
 
         Contacts = query.ToList();
 
+        // Чтобы TempData не пропала
         TempData["Username"] = Username;
         TempData["Role"] = Role;
     }
+
 }

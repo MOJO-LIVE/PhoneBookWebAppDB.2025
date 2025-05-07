@@ -1,7 +1,7 @@
 @page
 @model IndexModel
 @{
-    ViewData["Title"] = "Телефонная книга";
+    ViewData["Title"] = "Вход | Телефонная книга";
 }
 
 <style>
@@ -20,16 +20,10 @@
         box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
 
-    h1 {
-        margin: 0;
-        font-size: 24px;
-    }
-
     .content {
         display: flex;
         justify-content: center;
-        gap: 30px;
-        padding: 30px;
+        padding: 40px;
     }
 
     .auth-box {
@@ -79,6 +73,12 @@
         margin: 15px 0;
         text-align: center;
     }
+
+    .link {
+        display: block;
+        text-align: center;
+        margin-top: 20px;
+    }
 </style>
 
 <div class="header">
@@ -86,7 +86,6 @@
 </div>
 
 <div class="content">
-    <!-- Форма входа слева -->
     <div class="auth-box">
         <h2>Вход</h2>
         <form method="post" asp-page-handler="Login">
@@ -98,24 +97,12 @@
             </div>
             <button type="submit">Войти</button>
         </form>
-    </div>
 
-    <!-- Форма регистрации справа -->
-    <div class="auth-box">
-        <h2>Регистрация</h2>
-        <form method="post" asp-page-handler="Register">
-            <div class="form-group">
-                <input asp-for="RegisterUsername" placeholder="Имя пользователя">
-            </div>
-            <div class="form-group">
-                <input asp-for="RegisterPassword" type="password" placeholder="Пароль">
-            </div>
-            <button type="submit">Зарегистрироваться</button>
-        </form>
+        @if (!string.IsNullOrEmpty(Model.Message))
+        {
+            <div class="message">@Model.Message</div>
+        }
+
+        <a class="link" asp-page="/Register">Зарегистрироваться</a>
     </div>
 </div>
-
-@if (!string.IsNullOrEmpty(Model.Message))
-{
-    <div class="message" style="text-align: center; margin-top: 20px;">@Model.Message</div>
-}

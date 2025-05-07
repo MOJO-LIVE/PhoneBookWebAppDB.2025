@@ -95,7 +95,7 @@
         }
 </style>
 
-<h2>Привет, @Model.Username!</h2>
+<h2>Добро пожаловать, @Model.Username!</h2>
 <p>Ваша роль: @Model.Role</p>
 
 <form method="get">
@@ -112,6 +112,7 @@
             <th>Категория</th>
             @if (Model.Role == "Admin")
             {
+                <th>Создатель</th>
                 <th>Действия</th>
             }
         </tr>
@@ -125,7 +126,16 @@
                 <td>@contact.Category</td>
                 @if (Model.Role == "Admin")
                 {
-                    <td><a class="action-button" asp-page="/EditContact" asp-route-id="@contact.Id">Редактировать</a></td>
+                    <td>@contact.OwnerUsername</td>
+                    <td>
+                        <a class="action-button" asp-page="/EditContact" asp-route-id="@contact.Id">Редактировать</a>
+                    </td>
+                }
+                else if (contact.OwnerUsername == Model.Username)
+                {
+                    <td colspan="2">
+                        <a class="action-button" asp-page="/EditContact" asp-route-id="@contact.Id">Редактировать</a>
+                    </td>
                 }
             </tr>
         }

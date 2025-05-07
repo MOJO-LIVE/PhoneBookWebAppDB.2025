@@ -27,6 +27,7 @@ public class AddContactModel : PageModel
             Message = "Ошибка! Все поля должны быть заполнены.";
             return Page();
         }
+        Contact.OwnerUsername = TempData["Username"]?.ToString() ?? "";
 
         _context.Contacts.Add(Contact);
         _context.SaveChanges();

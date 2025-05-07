@@ -4,4 +4,5 @@
     public string Name { get; set; }
     public string Phone { get; set; }
     public string Category { get; set; }
+    public string OwnerUsername { get; set; } = "";
 }
