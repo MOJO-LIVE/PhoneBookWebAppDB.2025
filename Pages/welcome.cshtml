@@ -99,7 +99,10 @@
 <p>Ваша роль: @Model.Role</p>
 
 <form method="get">
-    <input type="text" name="search" value="@Model.Search" placeholder="Поиск по имени, телефону, категории" />
+    <input type="text" name="search" value="@Model.Search"
+           placeholder="@(Model.Role == "Admin"
+            ? "Поиск по имени, телефону, категории, создателю"
+            : "Поиск по имени, телефону, категории")" />
     <button type="submit">Искать</button>
     <a asp-page="/Welcome">Сбросить</a>
 </form>

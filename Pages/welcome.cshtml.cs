@@ -37,11 +37,23 @@ public class WelcomeModel : PageModel
         // Поиск по строке
         if (!string.IsNullOrWhiteSpace(Search))
         {
-            query = query.Where(c =>
-                c.Name.Contains(Search) ||
-                c.Phone.Contains(Search) ||
-                c.Category.Contains(Search));
+            if (Role == "Admin")
+            {
+                query = query.Where(c =>
+                    c.Name.Contains(Search) ||
+                    c.Phone.Contains(Search) ||
+                    c.Category.Contains(Search) ||
+                    c.OwnerUsername.Contains(Search));
+            }
+            else
+            {
+                query = query.Where(c =>
+                    c.Name.Contains(Search) ||
+                    c.Phone.Contains(Search) ||
+                    c.Category.Contains(Search));
+            }
         }
+
 
         Contacts = query.ToList();
 

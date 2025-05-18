@@ -42,4 +42,43 @@ public class RegisterModel : PageModel
         Message = "Регистрация успешна! Теперь вы можете войти.";
         return RedirectToPage("/Index");
     }
+
+    // AJAX: проверка логина
+    public JsonResult OnGetCheckUsername(string username)
+    {
+        bool exists = _context.Users.Any(u => u.Username == username);
+        return new JsonResult(new { exists });
+    }
+
+    // AJAX: регистрация
+    public JsonResult OnPostRegisterAjax([FromBody] RegisterDto dto)
+    {
+        if (dto == null ||
+            string.IsNullOrWhiteSpace(dto.Username) ||
+            string.IsNullOrWhiteSpace(dto.Password))
+        {
+            return new JsonResult(new { success = false, message = "Введите логин и пароль." });
+        }
+
+        if (_context.Users.Any(u => u.Username == dto.Username))
+        {
+            return new JsonResult(new { success = false, message = "Пользователь с таким именем уже существует." });
+        }
+
+        _context.Users.Add(new User
+        {
+            Username = dto.Username,
+            Password = dto.Password,
+            Role = "User"
+        });
+        _context.SaveChanges();
+
+        return new JsonResult(new { success = true, message = "Регистрация успешна!" });
+    }
+
+    public class RegisterDto
+    {
+        public string Username { get; set; }
+        public string Password { get; set; }
+    }
 }

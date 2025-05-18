@@ -12,24 +12,76 @@
     <div class="auth-box">
         <h2>Создать аккаунт</h2>
 
-        <form method="post">
+        <div id="ajaxMessage" class="message"></div>
+
+        <form id="registerForm">
             <div class="form-group">
-                <input asp-for="RegisterUsername" placeholder="Имя пользователя" />
+                <input id="RegisterUsername" name="RegisterUsername" placeholder="Имя пользователя" />
+                <span id="usernameMessage" style="margin-left: 10px;"></span>
             </div>
             <div class="form-group">
-                <input asp-for="RegisterPassword" type="password" placeholder="Пароль" />
+                <input id="RegisterPassword" name="RegisterPassword" type="password" placeholder="Пароль" />
             </div>
             <button type="submit">Зарегистрироваться</button>
         </form>
 
-        @if (!string.IsNullOrEmpty(Model.Message))
-        {
-            <div class="message">@Model.Message</div>
-        }
-
         <a class="link" asp-page="/Index">Войти</a>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        // Проверка доступности логина
+        document.getElementById("RegisterUsername").addEventListener("blur", () => {
+            const username = document.getElementById("RegisterUsername").value.trim();
+            if (!username) return;
+
+            fetch(`/Register?handler=CheckUsername&username=${encodeURIComponent(username)}`)
+                .then(response => response.json())
+                .then(data => {
+                    const msg = document.getElementById("usernameMessage");
+                    if (data.exists) {
+                        msg.textContent = "Имя уже занято";
+                        msg.style.color = "red";
+                    } else {
+                        msg.textContent = "Имя доступно";
+                        msg.style.color = "green";
+                    }
+                })
+                .catch(error => {
+                    console.error("Ошибка AJAX:", error);
+                });
+        });
+
+        // Отправка формы через AJAX
+        document.getElementById("registerForm").addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const username = document.getElementById("RegisterUsername").value;
+            const password = document.getElementById("RegisterPassword").value;
+
+            const response = await fetch("/Register?handler=RegisterAjax", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ username, password })
+            });
+
+            const result = await response.json();
+            const msg = document.getElementById("ajaxMessage");
+            msg.innerText = result.message;
+            msg.style.color = result.success ? "green" : "red";
+
+            if (result.success) {
+                // Можно переадресовать или очистить форму
+                setTimeout(() => {
+                    window.location.href = "/Index";
+                }, 1500);
+            }
+        });
+    </script>
+}
 
 <style>
     body {
@@ -110,7 +162,6 @@
         }
 
     .message {
-        color: #e74c3c;
         margin-top: 15px;
         text-align: center;
         font-size: 14px;
